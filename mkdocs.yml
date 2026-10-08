@@ -1,1 +1,12 @@
-site_name: My Docs
+site_name: My Awesome Docs
+site_url: https://github.io
+
+theme:
+  name: material
+  features:
+    - search.suggest      # Shows search suggestions while typing
+    - search.highlight    # Highlights the matching search words on the page
+    - search.share        # Adds a button to copy a link directly to a search result
+
+plugins:
+  - search                # Activates the built-in search engine
