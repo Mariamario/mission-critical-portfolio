@@ -41,6 +41,7 @@ nav:
 
 plugins:
   - search
+  - mkdocs-pyscript
 
 extra:
   social:
