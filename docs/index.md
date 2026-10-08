@@ -1,53 +1,24 @@
-# Mission Critical Engineering Portfolio
+# Executive Engineering Overview & Professional Profile
 
-Welcome to my portfolio. Below is an interactive sandbox powered by WebAssembly. You can edit the kW figures directly in your browser and run the simulation.
+Senior Data Center Infrastructure Engineer with extensive expertise in **Tier III/IV mission-critical engineering design**, power distribution analytics, automated capacity planning, and high-availability operations. Proven track record managing full lifecycle infrastructure projects—from preliminary load profiling through high-stress Level 5 Integrated Systems Testing (IST) validations.
 
-### 3-Phase Analytics Sandbox
+---
 
-Click \*\*LOAD\*\* below to activate the isolated Python environment, change the values, and click \*\*Run\*\*.
+## 1. Core Competency & Technical Practices Matrix
 
-```python
+- **Physical Power Distribution Topology:** Advanced proficiency designing and auditing \(2\text{N}\) concurrently maintainable electrical distribution systems. Expert capacity profiling across medium-voltage switchgear (\(13.8\text{kV}\)), emergency backup generators (\(2.5\text{MW}\)), and double-conversion online UPS systems (\(1000\text{kVA}\)).
+- **Thermal & Mechanical Integration:** Specialized experience designing hybrid data center cooling models, aligning Direct-to-Chip Liquid Cooling Distribution Products (CDP) and standard Hot Aisle Containment (HACC) layouts to maximize facility PUE efficiency.
+- **Automation & Infrastructure as Code (IaC):** Developing automated network inventory auditing tools and capacity models using the `pynetbox` Python REST API platform to ensure continuous infrastructure compliance.
+- **Operational Risk Management:** Comprehensive experience authoring breaker-level Methods of Procedure (MOPs) and Standard Operating Procedures (SOPs) to eliminate human error during live critical infrastructure maintenance windows.
 
-import math
+---
 
+## 2. Dynamic Automation Showcase Links
 
+To see my custom engineering software utilities and run calculations natively inside your browser, check out the dedicated live runtime environments built throughout this portfolio:
 
-# Editable parameters for portfolio review
+!!! success "🚀 Run Live: 3-Phase Analytics Simulation"
+Go straight to the **[3-Phase Analytics & PUE Dashboard](automation_scripts/power_analytics_view.md)** menu page to use the interactive calculation engine sandbox. You can input custom kW parameters to track line imbalances and vector neutral conductor loads live!
 
-voltage_ll = 415.0
-
-phase_kw = (18.5, 11.2, 7.8)  # Edit these values to test unbalance!
-
-power_factor = 0.95
-
-
-
-voltage_ln = voltage_ll / math.sqrt(3)
-
-
-
-# 3-Phase currents calculation
-
-ia = (phase_kw[0] * 1000) / (voltage_ln * power_factor)
-
-ib = (phase_kw[1] * 1000) / (voltage_ln * power_factor)
-
-ic = (phase_kw[2] * 1000) / (voltage_ln * power_factor)
-
-
-
-# Vectorial neutral calculations
-
-inside_sqrt = (ia**2 + ib**2 + ic**2) - (ia * ib) - (ib * ic) - (ic * ia)
-
-neutral_amps = math.sqrt(max(0.0, inside_sqrt))
-
-
-
-print("--- Live Engine Analytics Output ---")
-
-print(f"Phase A: {ia:.2f} A | Phase B: {ib:.2f} A | Phase C: {ic:.2f} A")
-
-print(f"Calculated Unbalanced Neutral Load: {neutral_amps:.2f} Amps")
-
-```
+!!! info "🔍 Audit Live: NetBox DCIM Validation Logic"
+Go straight to the **[NetBox DCIM API Audit Overview](automation_scripts/netbox_audit_view.md)** menu page to inspect the object-oriented infrastructure validation logic used to verify dual-feed redundancy constraints across active server footprints.
