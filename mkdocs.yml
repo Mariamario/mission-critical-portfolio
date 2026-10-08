@@ -22,30 +22,37 @@ theme:
     - search.suggest
     - search.highlight
     - search.share
-    - navigation.tabs
-    - navigation.tabs
+    - navigation.tabs # Fixed: Removed the duplicate duplicate entry
     - navigation.sections
     - content.code.copy
     - content.code.annotate
+
+# FIXED: Points directly to the actual auto-assembling MathJax engine CDN distribution link
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 
 markdown_extensions:
   - admonition
   - attr_list
   - tables
-  - pymdownx.snippets: # Crucial: Must have a colon after it
-      base_path: docs # Explicitly points the snippet engine to your docs folder
+  - pymdownx.snippets:
+      base_path: docs
+  - pymdownx.arithmatex:
+      generic: true
   - pymdownx.details
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.highlight:
       anchor_linenums: true
-      line_spans: __span # Crucial for PyScript text injection hooks
-      pygments_lang_class: true # Ensures correct language parsing in WebAssembly
-  - pymdownx.superfences: # Combined into a single, clean block
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+
 nav:
   - Executive Overview: index.md
   - Physical Design & Power Architecture:
