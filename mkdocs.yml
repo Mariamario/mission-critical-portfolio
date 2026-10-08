@@ -1,12 +1,49 @@
-site_name: My Awesome Docs
+site_name: E Ayalogu's Awesome Docs
 site_url: https://github.io
 
 theme:
   name: material
+  
+  # 1. DARK MODE TOGGLE (Switches based on user preference or button click)
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
   features:
-    - search.suggest      # Shows search suggestions while typing
-    - search.highlight    # Highlights the matching search words on the page
-    - search.share        # Adds a button to copy a link directly to a search result
+    - search.suggest
+    - search.highlight
+    - search.share
+    - navigation.tabs       # Optional: Adds a nice top horizontal menu bar
+
+# 2. ORGANIZE MULTIPLE PAGES (Sets up your side menu structure)
+nav:
+  - Home: index.md
+  - Getting Started: 
+    - Overview: getting-started/overview.md
+    - Installation: getting-started/install.md
+  - Tutorials:
+    - First Guide: tutorials/guide1.md
 
 plugins:
-  - search                # Activates the built-in search engine
+  - search
+
+# 3. CUSTOM SOCIAL LINKS (Adds links into the bottom footer)
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://mariamario.github.io/my-docs-site/
+      name: Mariamario on GitHub
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/emenike-ayalogu-0399b876/   # Optional: update or delete
