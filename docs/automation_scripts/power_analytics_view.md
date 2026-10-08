@@ -7,5 +7,5 @@ This production-grade core calculation module extracts 3-phase line current bala
 Click **LOAD** to spin up the WebAssembly runtime environment, alter the system metrics directly in the box below, and click **Run**.
 
 ```python { .python .pyscript }
---8<-- "docs/automation_scripts/power_analytics.py"
+--8<-- "automation_scripts/power_analytics.py"
 ```

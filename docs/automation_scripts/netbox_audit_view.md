@@ -7,5 +7,5 @@ This automated object-oriented engine queries infrastructure active assets direc
 Click **LOAD** to spin up the WebAssembly runtime environment, change the site slugs, and click **Run** to execute the compliance logic in fallback demo mode.
 
 ```python { .python .pyscript }
---8<-- "docs/automation_scripts/netbox_audit.py"
+--8<-- "automation_scripts/netbox_audit.py"
 ```

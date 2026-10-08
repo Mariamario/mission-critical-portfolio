@@ -32,6 +32,8 @@ markdown_extensions:
   - admonition
   - attr_list
   - tables
+  - pymdownx.snippets: # Crucial: Must have a colon after it
+      base_path: docs # Explicitly points the snippet engine to your docs folder
   - pymdownx.details
   - pymdownx.tabbed:
       alternate_style: true
