@@ -50,8 +50,8 @@ nav:
       - 2N Redundant SLD Specifications: engineering-design/sld-2n-architecture.md
       - Liquid & Air Cooling Integration: engineering-design/mechanical-cooling.md
   - Python Automation Engines:
-      - 3-Phase Analytics & PUE: automation_scripts/power_analytics.py
-      - NetBox DCIM API Audit: automation_scripts/netbox_audit.py
+      - 3-Phase Analytics & PUE: automation_scripts/power_analytics_view.md
+      - NetBox DCIM API Audit: automation_scripts/netbox_audit_view.md
   - Operations & MOP Frameworks:
       - Live Zero-Downtime UPS Bypass MOP: mops-sops/live-ups-maintenance.md
   - Commissioning Validation:
