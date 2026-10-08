@@ -32,7 +32,20 @@ The commissioning progression is structured across five sequential phases, drivi
 ### Automated Real-Time System Response Timeline
 
 ```mermaid
-%%{init: {'gantt': {'axisFormat': '%S', 'topPadding': 50, 'leftPadding': 180, 'barHeight': 45, 'barGap': 16, 'sidePadding': 60, 'fontSize': 16, 'sectionFontSize': 18}}}%%
+%%{init: {
+  'themeCSS': '.tick text { font-size: 24px !important; } .titleText { font-size: 36px !important; font-weight: bold; }',
+  'gantt': {
+    'titleTopMargin': 35,
+    'axisFormat': '%S',
+    'topPadding': 75,
+    'leftPadding': 200,
+    'barHeight': 80,
+    'barGap': 16,
+    'sidePadding': 60,
+    'fontSize': 24,
+    'sectionFontSize': 30
+  }
+}}%%
 gantt
     title Integrated Systems Blackout Test (15-Second Critical Cycle)
     dateFormat  X
@@ -52,7 +65,6 @@ gantt
     section HVAC Cooling
     Chilled Water Backup Pumps Active : 10, 12
     CRAH Fans Arrays Staged Auto-Restart Sequence : 12, 15
-
 ```
 
 ### Logged Performance Telemetry Matrix
