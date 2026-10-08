@@ -1,20 +1,20 @@
-site_name: Mission Critical Portfolio
-site_url: https://github.io
+site_name: Senior Mission Critical Electrical Engineer Portfolio
+site_url: https://mission-critical-portfolio.pages.dev/
 
 theme:
   name: material
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: steel blue
-      accent: indigo
+      primary: indigo
+      accent: cyan
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: steel blue
-      accent: indigo
+      primary: indigo
+      accent: cyan
       toggle:
         icon: material/brightness-4
         name: Switch to light mode

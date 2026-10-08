@@ -1,64 +1,73 @@
 """
-3-Phase Electrical Load, Neutral Unbalance, and PUE Calculation Engine.
-Provides calculation frameworks for mission-critical infrastructure metrics.
+Data Center Power Analytics & Efficiency Engine
+Calculates rack power budgets, 3-phase line currents, neutral conductor loading,  
+and facility Power Usage Effectiveness (PUE) metrics.  
 """
-
 import math
-from typing import Dict, Tuple
+import sys
+from typing import Dict, List, Any
 
-class PowerAnalyticsEngine:
-    def __init__(self, voltage_ll: float = 415.0):
-        """
-        Initializes engine with a standard Line-to-Line voltage.
-        Default is 415V LL (yielding ~240V Line-to-Neutral).
-        """
-        self.voltage_ll = voltage_ll
-        self.voltage_ln = voltage_ll / math.sqrt(3)
+def calculate_rack_power(devices: List[Dict[str, Any]]) -> Dict[str, float]:
+    total_nameplate_watts = 0.0
+    total_actual_measured_watts = 0.0
+    for dev in devices:
+        nameplate = float(dev.get("nameplate_watts", 0.0))
+        actual = float(dev.get("actual_measured_watts", nameplate * 0.60))
+        total_nameplate_watts += nameplate
+        total_actual_measured_watts += actual
+    static_derated_budget_watts = total_nameplate_watts * 0.60
+    stranded_capacity_recovered_watts = static_derated_budget_watts - total_actual_measured_watts
+    return {
+        "total_nameplate_watts": total_nameplate_watts,
+        "total_actual_measured_watts": total_actual_measured_watts,
+        "static_derated_budget_watts": static_derated_budget_watts,
+        "stranded_capacity_recovered_watts": stranded_capacity_recovered_watts,
+    }
 
-    def calculate_phase_currents(self, phase_kw: Tuple[float, float, float], power_factor: float = 0.95) -> Tuple[float, float, float]:
-        """
-        Calculates Line Currents (Amps) for Phase A, B, and C assuming a steady Power Factor.
-        Formula: I = (kW * 1000) / (V_ln * PF)
-        """
-        if power_factor <= 0 or power_factor > 1.0:
-            raise ValueError("Power factor must be strictly between 0 and 1.0")
-            
-        ia = (phase_kw[0] * 1000) / (self.voltage_ln * power_factor)
-        ib = (phase_kw[1] * 1000) / (self.voltage_ln * power_factor)
-        ic = (phase_kw[2] * 1000) / (self.voltage_ln * power_factor)
-        return (round(ia, 2), round(ib, 2), round(ic, 2))
+def analyze_three_phase_system(line_a_amps: float, line_b_amps: float, line_c_amps: float, v_line_to_line: float = 208.0, power_factor: float = 0.95) -> Dict[str, Any]:
+    if any(i < 0 for i in (line_a_amps, line_b_amps, line_c_amps)):
+        raise ValueError("Line currents must be non-negative values.")
+    if v_line_to_line <= 0:
+        raise ValueError("Line-to-Line voltage must be greater than zero.")
+    if not (0.0 < power_factor <= 1.0):
+        raise ValueError("Power factor must be strictly between 0.0 and 1.0.")
+    avg_current_amps = (line_a_amps + line_b_amps + line_c_amps) / 3.0
+    if avg_current_amps == 0.0:
+        return {"status": "NO_LOAD", "apparent_power_kva": 0.0, "active_power_kw": 0.0, "neutral_current_amps": 0.0, "imbalance_percent": 0.0}
+    apparent_power_kva = (math.sqrt(3) * v_line_to_line * avg_current_amps) / 1000.0
+    active_power_kw = apparent_power_kva * power_factor
+    neutral_current_amps = math.sqrt(line_a_amps**2 + line_b_amps**2 + line_c_amps**2 - (line_a_amps * line_b_amps + line_b_amps * line_c_amps + line_c_amps * line_a_amps))
+    max_deviation = max(abs(line_a_amps - avg_current_amps), abs(line_b_amps - avg_current_amps), abs(line_c_amps - avg_current_amps))
+    imbalance_percent = (max_deviation / avg_current_amps) * 100.0
+    status = "CRITICAL_IMBALANCE" if (imbalance_percent > 20.0 or neutral_current_amps > (0.5 * avg_current_amps)) else "BALANCED"
+    return {
+        "line_a_amps": line_a_amps, "line_b_amps": line_b_amps, "line_c_amps": line_c_amps,
+        "average_amps": round(avg_current_amps, 2), "neutral_current_amps": round(neutral_current_amps, 2),
+        "apparent_power_kva": round(apparent_power_kva, 2), "active_power_kw": round(active_power_kw, 2),
+        "imbalance_percent": round(imbalance_percent, 2), "status": status
+    }
 
-    def calculate_neutral_current(self, currents: Tuple[float, float, float]) -> float:
-        """
-        Calculates vector sum of neutral current resulting from unbalance.
-        Formula: I_n = sqrt(Ia^2 + Ib^2 + Ic^2 - (Ia*Ib) - (Ib*Ic) - (Ic*Ia))
-        """
-        ia, ib, ic = currents
-        inside_sqrt = (ia**2 + ib**2 + ic**2) - (ia * ib) - (ib * ic) - (ic * ia)
-        # Account for precision boundaries close to 0
-        return round(math.sqrt(max(0.0, inside_sqrt)), 2)
+def calculate_facility_pue(total_facility_kw: float, it_equipment_kw: float) -> Dict[str, float]:
+    if it_equipment_kw <= 0.0:
+        raise ValueError("IT Equipment Power must be greater than zero.")
+    if total_facility_kw < it_equipment_kw:
+        raise ValueError("Total Facility Power cannot be less than IT Equipment Power.")
+    pue = total_facility_kw / it_equipment_kw
+    overhead_kw = total_facility_kw - it_equipment_kw
+    overhead_percent = (overhead_kw / total_facility_kw) * 100.0
+    return {"pue": round(pue, 3), "total_facility_kw": round(total_facility_kw, 2), "it_equipment_kw": round(it_equipment_kw, 2), "overhead_kw": round(overhead_kw, 2), "overhead_percent": round(overhead_percent, 2)}
 
-    @staticmethod
-    def calculate_pue(total_facility_kw: float, it_equipment_kw: float) -> float:
-        """
-        Calculates Power Usage Effectiveness (PUE).
-        Formula: Total Facility Energy / IT Equipment Energy
-        """
-        if it_equipment_kw <= 0:
-            raise ValueError("IT Equipment Load must be greater than 0 kW to compute PUE.")
-        return round(total_facility_kw / it_equipment_kw, 3)
+# Execution handler for live web sandbox environments
+rack_devices = [
+    {"device_id": "srv-01", "nameplate_watts": 750, "actual_measured_watts": 420},
+    {"device_id": "srv-02", "nameplate_watts": 750, "actual_measured_watts": 410},
+    {"device_id": "srv-03", "nameplate_watts": 1200, "actual_measured_watts": 680},
+]
+rack_results = calculate_rack_power(rack_devices)
+phase_results = analyze_three_phase_system(line_a_amps=42.5, line_b_amps=48.0, line_c_amps=39.0)
+pue_results = calculate_facility_pue(total_facility_kw=1450.0, it_equipment_kw=1100.0)
 
-
-if __name__ == "__main__":
-    # Sample runtime demonstration for site visitors
-    engine = PowerAnalyticsEngine(voltage_ll=415.0)
-    
-    # 15kW on Phase A, 12kW on Phase B, 10kW on Phase C
-    sample_kw = (15.0, 12.0, 10.0)
-    amps = engine.calculate_phase_currents(sample_kw, power_factor=0.95)
-    neutral = engine.calculate_neutral_current(amps)
-    pue = engine.calculate_pue(total_facility_kw=65.0, it_equipment_kw=37.0)
-    
-    print(f"Calculated Currents (A): Phase A: {amps[0]}, Phase B: {amps[1]}, Phase C: {amps[2]}")
-    print(f"Resulting Vector Neutral Current: {neutral} A")
-    print(f"Calculated Data Center PUE: {pue}")
+print(f"--- Power Recovery Framework Metrics ---")
+print(f"Recovered Stranded Power Capacity: {rack_results['stranded_capacity_recovered_watts']:.2f} W")
+print(f"Calculated System Unbalanced Neutral Return Load: {phase_results['neutral_current_amps']} Amps")
+print(f"Calculated Infrastructure Optimization PUE Target: {pue_results['pue']}")
