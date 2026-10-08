@@ -1,24 +1,55 @@
-name: Deploy MkDocs
+name: Deploy Portfolio
 on:
   push:
     branches:
       - main
+
+# Gives GitHub Actions explicit secure permissions to host pages directly
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+# Prevents multiple deployments from fighting each other
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.x
-      - run: echo "cache_id=$(date --utc +%V)" >> $GITHUB_ENV
-      - uses: actions/cache@v4
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Calculations Validation Suite
+        env:
+          PYTHONPATH: .
+        run: |
+          pytest
+
+      - name: Setup GitHub Pages Configuration
+        uses: actions/configure-pages@v5
+
+      - name: Compile Static Documentation
+        run: |
+          mkdocs build  # Generates the site folder locally in the cloud container
+
+      - name: Upload Production Artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          key: mkdocs-material-${{ env.cache_id }}
-          path: .cache
-          restore-keys: |
-            mkdocs-material-
-      - run: pip install -r requirements.txt
-      - run: mkdocs gh-deploy --force
+          path: "./site" # Packages your compiled html pages
+
+      - name: Deploy Live to GitHub Pages Natively
+        id: deployment
+        uses: actions/deploy-pages@v4 # Publishes directly to the web
