@@ -1,49 +1,49 @@
-site_name: E Ayalogu's Awesome Docs
+site_name: Mission Critical Portfolio
 site_url: https://github.io
 
 theme:
   name: material
-  
-  # 1. DARK MODE TOGGLE (Switches based on user preference or button click)
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: indigo
+      primary: steel blue
       accent: indigo
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: indigo
+      primary: steel blue
       accent: indigo
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
-
   features:
     - search.suggest
     - search.highlight
     - search.share
-    - navigation.tabs       # Optional: Adds a nice top horizontal menu bar
+    - navigation.tabs
 
-# 2. ORGANIZE MULTIPLE PAGES (Sets up your side menu structure)
 nav:
-  - Home: index.md
-  - Getting Started: 
-    - Overview: getting-started/overview.md
-    - Installation: getting-started/install.md
-  - Tutorials:
-    - First Guide: tutorials/guide1.md
+  - Executive Summary: index.md
+  - Engineering & Design:
+    - 2N Architecture & Switchgear: engineering-design/sld-2n-architecture.md
+    - Mechanical Cooling & Thermal: engineering-design/mechanical-cooling.md
+  - Automation Scripts:
+    - 3-Phase Analytics Engine: automation-scripts/power_analytics.py
+    - NetBox Redundancy Audit: automation-scripts/netbox_audit.py
+  - MOPs & SOPs:
+    - Live UPS Bypass Procedure: mops-sops/live-ups-maintenance.md
+  - Commissioning Framework:
+    - FAT to Level 5 IST Scripts: commissioning/level1-5-framework.md
+  - Reference Catalog:
+    - Industry Link Index: reference-catalog/industry-links.md
 
 plugins:
   - search
 
-# 3. CUSTOM SOCIAL LINKS (Adds links into the bottom footer)
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://mariamario.github.io/my-docs-site/
+      link: https://github.com
       name: Mariamario on GitHub
-    - icon: fontawesome/brands/linkedin
-      link: https://www.linkedin.com/in/emenike-ayalogu-0399b876/   # Optional: update or delete
