@@ -23,21 +23,41 @@ theme:
     - search.highlight
     - search.share
     - navigation.tabs
+    - navigation.tabs
+    - navigation.sections
+    - content.code.copy
+    - content.code.annotate
 
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span # Crucial for PyScript text injection hooks
+      pygments_lang_class: true # Ensures correct language parsing in WebAssembly
+  - pymdownx.superfences: # Combined into a single, clean block
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 nav:
-  - Executive Summary: index.md
-  - Engineering & Design:
-    - 2N Architecture & Switchgear: engineering-design/sld-2n-architecture.md
-    - Mechanical Cooling & Thermal: engineering-design/mechanical-cooling.md
-  - Automation Scripts:
-    - 3-Phase Analytics Engine: automation-scripts/power_analytics.py
-    - NetBox Redundancy Audit: automation-scripts/netbox_audit.py
-  - MOPs & SOPs:
-    - Live UPS Bypass Procedure: mops-sops/live-ups-maintenance.md
-  - Commissioning Framework:
-    - FAT to Level 5 IST Scripts: commissioning/level1-5-framework.md
-  - Reference Catalog:
-    - Industry Link Index: reference-catalog/industry-links.md
+  - Executive Overview: index.md
+  - Physical Design & Power Architecture:
+      - 2N Redundant SLD Specifications: engineering-design/sld-2n-architecture.md
+      - Liquid & Air Cooling Integration: engineering-design/mechanical-cooling.md
+  - Python Automation Engines:
+      - 3-Phase Analytics & PUE: automation_scripts/power_analytics.py
+      - NetBox DCIM API Audit: automation_scripts/netbox_audit.py
+  - Operations & MOP Frameworks:
+      - Live Zero-Downtime UPS Bypass MOP: mops-sops/live-ups-maintenance.md
+  - Commissioning Validation:
+      - L1-L5 Commissioning & Blackout IST: commissioning/level1-5-framework.md
+  - Enterprise Catalog:
+      - Resource Catalog & Link Index: reference-catalog/industry-links.md
 
 plugins:
   - search
